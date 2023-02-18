@@ -17,4 +17,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none; /* to prevent this image to interact with mouse click
+  because it's on top of the canvas and we need to click on canvas not the overlay image  */
 }
