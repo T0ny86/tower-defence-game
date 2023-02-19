@@ -12,6 +12,7 @@ window.addEventListener("load", function () {
   ctx.lineWidth = 3;
   ctx.strokeStyle = "white";
 
+  // Player class:
   class Player {
     constructor(game) {
       this.game = game;
@@ -52,7 +53,7 @@ window.addEventListener("load", function () {
       if (distance > this.speedModifier) {
         this.speedX = this.dx / distance || 0; // OR zero " || 0 " just a backup if any values is not defined
         this.speedY = this.dy / distance || 0;
-      }else{
+      } else {
         this.speedX = 0;
         this.speedY = 0;
       }
@@ -69,12 +70,43 @@ window.addEventListener("load", function () {
     }
   }
 
+  // Obstacles class:
+  class Obstacle {
+    constructor(game) {
+      this.game = game;
+      this.collisionX = Math.random() * this.game.width;
+      this.collisionY = Math.random() * this.game.height;
+      this.collisionRadius = 60;
+    }
+    draw(context) {
+      context.beginPath();
+      context.arc(
+        this.collisionX,
+        this.collisionY,
+        this.collisionRadius,
+        0,
+        Math.PI * 2
+      );
+      context.save();
+      context.globalAlpha = 0.5;
+      context.fill();
+      context.restore();
+      context.stroke();
+    }
+  }
+
+  // main Game class :
   class Game {
     constructor(canvas) {
       this.canvas = canvas;
       this.width = this.canvas.width;
       this.height = this.canvas.height;
+      // create new Player:
       this.player = new Player(this);
+      // create Obstacles:
+      this.numberOfObstacles = 5;
+      this.obstacles = [];
+
       this.mouse = {
         x: this.width * 0.5,
         y: this.height * 0.5,
@@ -102,13 +134,23 @@ window.addEventListener("load", function () {
         // console.log(this.mouse.x , this.mouse.y);
       });
     }
+
     render(context) {
       this.player.draw(context);
       this.player.update();
+      this.obstacles.forEach((obstcale) => obstcale.draw(context));
+    }
+
+    init() {
+      for (let i = 0; i < this.numberOfObstacles; i++) {
+        this.obstacles.push(new Obstacle(this));
+      }
     }
   }
 
   const game = new Game(canvas);
+  game.init();
+  console.log(game);
 
   function animation() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
