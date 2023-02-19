@@ -142,15 +142,33 @@ window.addEventListener("load", function () {
     }
 
     init() {
-      for (let i = 0; i < this.numberOfObstacles; i++) {
-        this.obstacles.push(new Obstacle(this));
+      // basic technique to create and locate obstacles in random positions:
+      // for (let i = 0; i < this.numberOfObstacles; i++) this.obstacles.push(new Obstacle(this));
+
+      // brute force algorithm, to avoid overlapping and relocate things in specific area:
+      let attempts = 0; // to set maximum number of attempts
+      while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
+        /* second condition is to limit the maximum attempts to 500 times,
+        if these attempt not enough to fine all the empty positions for all the Obstacles, then the WHILE loop will stop, that's safer then enter infinite loop */
+        attempts++;
+        let overlap = false;
+        let testObstacle = new Obstacle(this);
+        // 
+        this.obstacles.forEach((obstacle) => {
+          const dx = testObstacle.collisionX - obstacle.collisionX;
+          const dy = testObstacle.collisionY - obstacle.collisionY;
+          const distance = Math.hypot(dy, dx);  // distance between to centers (by calculating the long side of triangle)
+          const sumOfRadius = testObstacle.collisionRadius + obstacle.collisionRadius; // find the total size of both of obstacles
+          if (distance < sumOfRadius) overlap = true; // if TRUE then try to fine new position (Math.random(); it self in Obstacl Class above in constructor)
+        });
+        // 
+        if(!overlap) this.obstacles.push(testObstacle)
       }
     }
   }
 
   const game = new Game(canvas);
   game.init();
-  console.log(game);
 
   function animation() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
