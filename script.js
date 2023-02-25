@@ -76,9 +76,28 @@ window.addEventListener("load", function () {
       this.game = game;
       this.collisionX = Math.random() * this.game.width;
       this.collisionY = Math.random() * this.game.height;
-      this.collisionRadius = 60;
+      this.collisionRadius = 50; // hard coded, just to fit the base of obstacle picture
+      this.image = document.getElementById("obstacles");
+      this.spriteWidth = 250; // sprite picture size is 250*250px
+      this.spriteHeight = 250;
+      this.width = this.spriteWidth;
+      this.height = this.spriteHeight;
+      this.spriteX = this.collisionX - this.width * 0.5; // find the center of sprite
+      this.spriteY = this.collisionY - this.height * 0.5 - 75;
+      // the value " -75 " // hard coded, just to fit the base of obstacle picture
     }
     draw(context) {
+      context.drawImage(
+        this.image,
+        0,
+        0,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.spriteX,
+        this.spriteY,
+        this.width,
+        this.height
+      );
       context.beginPath();
       context.arc(
         this.collisionX,
@@ -104,7 +123,7 @@ window.addEventListener("load", function () {
       // create new Player:
       this.player = new Player(this);
       // create Obstacles:
-      this.numberOfObstacles = 5;
+      this.numberOfObstacles = 1;
       this.obstacles = [];
 
       this.mouse = {
@@ -153,16 +172,17 @@ window.addEventListener("load", function () {
         attempts++;
         let overlap = false;
         let testObstacle = new Obstacle(this);
-        // 
+        //
         this.obstacles.forEach((obstacle) => {
           const dx = testObstacle.collisionX - obstacle.collisionX;
           const dy = testObstacle.collisionY - obstacle.collisionY;
-          const distance = Math.hypot(dy, dx);  // distance between to centers (by calculating the long side of triangle)
-          const sumOfRadius = testObstacle.collisionRadius + obstacle.collisionRadius; // find the total size of both of obstacles
+          const distance = Math.hypot(dy, dx); // distance between to centers (by calculating the long side of triangle)
+          const sumOfRadius =
+            testObstacle.collisionRadius + obstacle.collisionRadius; // find the total size of both of obstacles
           if (distance < sumOfRadius) overlap = true; // if TRUE then try to fine new position (Math.random(); it self in Obstacl Class above in constructor)
         });
-        // 
-        if(!overlap) this.obstacles.push(testObstacle)
+        //
+        if (!overlap) this.obstacles.push(testObstacle);
       }
     }
   }
