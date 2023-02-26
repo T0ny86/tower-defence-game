@@ -120,10 +120,11 @@ window.addEventListener("load", function () {
       this.canvas = canvas;
       this.width = this.canvas.width;
       this.height = this.canvas.height;
+      this.topMargin = 260; //hardcoded: add top buffer, to avoid draw obstacles on the grass, trees and bushes, those already drawn the background image
       // create new Player:
       this.player = new Player(this);
       // create Obstacles:
-      this.numberOfObstacles = 5;
+      this.numberOfObstacles = 10;
       this.obstacles = [];
 
       this.mouse = {
@@ -172,7 +173,7 @@ window.addEventListener("load", function () {
         attempts++;
         let overlap = false;
         let testObstacle = new Obstacle(this);
-        //
+        // forLoop to check each created obstacle in the acceptable position
         this.obstacles.forEach((obstacle) => {
           const dx = testObstacle.collisionX - obstacle.collisionX;
           const dy = testObstacle.collisionY - obstacle.collisionY;
@@ -180,13 +181,21 @@ window.addEventListener("load", function () {
           const distanceBuffer = 100; // to add minimum distance between obstacles
           const sumOfRadius =
             testObstacle.collisionRadius +
-            obstacle.collisionRadius +    // find the total size of both of obstacles
-            distanceBuffer; 
+            obstacle.collisionRadius + // find the total size of both of obstacles
+            distanceBuffer;
 
           if (distance < sumOfRadius) overlap = true; // if TRUE then try to fine new position (Math.random(); it self in Obstacl Class above in constructor)
         });
-        //
-        if (!overlap) this.obstacles.push(testObstacle);
+        const margin = testObstacle.collisionRadius * 2; // just add more space between abstacles to allow player and enemies move around and between
+        // here we make sure the correct positioning:
+        if (
+          !overlap &&
+          testObstacle.spriteX > 0 &&
+          testObstacle.spriteX < this.width - testObstacle.width &&
+          testObstacle.collisionY > this.topMargin + margin &&
+          testObstacle.collisionY < this.height - margin
+        )
+          this.obstacles.push(testObstacle);
       }
     }
   }
