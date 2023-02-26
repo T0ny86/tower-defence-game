@@ -76,7 +76,7 @@ window.addEventListener("load", function () {
       this.game = game;
       this.collisionX = Math.random() * this.game.width;
       this.collisionY = Math.random() * this.game.height;
-      this.collisionRadius = 50; // hard coded, just to fit the base of obstacle picture
+      this.collisionRadius = 70; // hard coded, just to fit the base of obstacle picture
       this.image = document.getElementById("obstacles");
       this.spriteWidth = 250; // sprite picture size is 250*250px
       this.spriteHeight = 250;
@@ -85,12 +85,15 @@ window.addEventListener("load", function () {
       this.spriteX = this.collisionX - this.width * 0.5; // find the center of sprite
       this.spriteY = this.collisionY - this.height * 0.5 - 75;
       // the value " -75 " // hard coded, just to fit the base of obstacle picture
+      this.frameX = Math.floor(Math.random() * 4); // numbers from 0 to 3, to choose one of the sprites from the image
+      this.frameY = Math.floor(Math.random() * 3); // numbers from 0 to 2
+
     }
     draw(context) {
       context.drawImage(
         this.image,
-        0,
-        0,
+        this.frameX * this.spriteWidth,
+        this.frameY * this.spriteHeight,
         this.spriteWidth,
         this.spriteHeight,
         this.spriteX,
