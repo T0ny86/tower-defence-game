@@ -123,7 +123,7 @@ window.addEventListener("load", function () {
       // create new Player:
       this.player = new Player(this);
       // create Obstacles:
-      this.numberOfObstacles = 1;
+      this.numberOfObstacles = 5;
       this.obstacles = [];
 
       this.mouse = {
@@ -177,8 +177,12 @@ window.addEventListener("load", function () {
           const dx = testObstacle.collisionX - obstacle.collisionX;
           const dy = testObstacle.collisionY - obstacle.collisionY;
           const distance = Math.hypot(dy, dx); // distance between to centers (by calculating the long side of triangle)
+          const distanceBuffer = 100; // to add minimum distance between obstacles
           const sumOfRadius =
-            testObstacle.collisionRadius + obstacle.collisionRadius; // find the total size of both of obstacles
+            testObstacle.collisionRadius +
+            obstacle.collisionRadius +    // find the total size of both of obstacles
+            distanceBuffer; 
+
           if (distance < sumOfRadius) overlap = true; // if TRUE then try to fine new position (Math.random(); it self in Obstacl Class above in constructor)
         });
         //
