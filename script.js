@@ -67,6 +67,12 @@ window.addEventListener("load", function () {
       */
       this.collisionX += this.speedX * this.speedModifier;
       this.collisionY += this.speedY * this.speedModifier;
+      // check if collision:
+      this.game.obstacles.forEach(obstacle => {
+        if(this.game.checkCollision(this, obstacle)){
+          console.log('did');
+        }
+      })
     }
   }
 
@@ -87,7 +93,6 @@ window.addEventListener("load", function () {
       // the value " -75 " // hard coded, just to fit the base of obstacle picture
       this.frameX = Math.floor(Math.random() * 4); // numbers from 0 to 3, to choose one of the sprites from the image
       this.frameY = Math.floor(Math.random() * 3); // numbers from 0 to 2
-
     }
     draw(context) {
       context.drawImage(
@@ -162,6 +167,14 @@ window.addEventListener("load", function () {
       this.player.draw(context);
       this.player.update();
       this.obstacles.forEach((obstcale) => obstcale.draw(context));
+    }
+
+    checkCollision(a, b) {
+      const dx = a.collisionX - b.collisionX;
+      const dy = a.collisionY - b.collisionY;
+      const distance = Math.hypot(dy, dx);
+      const sumOfRadius = a.collisionRadius + b.collisionRadius;
+      return distance < sumOfRadius; // return TRUE if there is collision
     }
 
     init() {
